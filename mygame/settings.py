@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-u@zb@i5ul12#37sps!(j^y4-+3-j--tk8lc=vrt)4fal&6j&5#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['game.wegoon.top']
 
 
 # Application definition
