@@ -24,10 +24,3 @@ class MyGameMenu {
         this.$settings = this.$menu.find('.my_game_menu_field_item_settings');
     }
 }
-class MyGame {
-    constructor(id) {
-        this.id = id;
-        this.$my_game = $('#' + id);
-        this.menu = new MyGameMenu(this);
-    }
-}
