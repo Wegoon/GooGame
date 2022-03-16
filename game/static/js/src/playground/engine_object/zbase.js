@@ -37,9 +37,8 @@ let MY_GAME_ANIMATION = function (timestamp) {
             obj.timedelta = timestamp - last_timestamp;
             obj.update();
         }
-        last_timestamp = timestamp;
     }
-
+    last_timestamp = timestamp;
     requestAnimationFrame(MY_GAME_ANIMATION);
 }
 
