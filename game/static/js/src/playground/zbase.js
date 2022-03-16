@@ -7,7 +7,7 @@ class MyGamePlayground {
             </div>
         `);
 
-        this.hide();
+        // this.hide();
         this.root.$my_game.append(this.$playground);
 
         this.start();

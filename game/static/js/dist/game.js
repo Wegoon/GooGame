@@ -57,7 +57,7 @@ class MyGameMenu {
             </div>
         `);
 
-        this.hide();
+        // this.hide();
         this.root.$my_game.append(this.$playground);
 
         this.start();
@@ -71,11 +71,11 @@ class MyGameMenu {
     hide() { // 关闭playground界面
         this.$playground.hide();
     }
-}class MyGame {
+}export class MyGame {
     constructor(id) {
         this.id = id;
         this.$my_game = $('#' + id);
-        this.menu = new MyGameMenu(this);
+        // this.menu = new MyGameMenu(this);
         this.playground = new MyGamePlayground(this);
 
         this.start();
