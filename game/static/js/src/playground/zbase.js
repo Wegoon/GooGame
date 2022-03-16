@@ -3,12 +3,16 @@ class MyGamePlayground {
         this.root = root;
         this.$playground = $(`
             <div class="my_game_playground">
-                <h1>游戏界面</h1>
             </div>
         `);
 
         // this.hide();
         this.root.$my_game.append(this.$playground);
+        this.width = this.$playground.width();
+        // console.log(this.width);
+        this.height = this.$playground.height();
+        // console.log(this.height);
+        this.game_map = new GameMap(this);
 
         this.start();
     }
