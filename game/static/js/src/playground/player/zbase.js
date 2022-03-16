@@ -12,7 +12,7 @@ class Player extends MyGameObject {
         this.speed = speed;
         this.is_me = is_me;
         this.eps = 0.1;
-        // this.start();
+        this.start();
     }
     start() {
         if (this.is_me) {
