@@ -62,11 +62,11 @@ class MyGameObject {
     update() { // 每一帧都会执行一次
 
     }
-    on_destory() { // 在被销毁前执行一次
+    on_destroy() { // 在被销毁前执行一次
 
     }
-    destory() { // 删掉该物体
-        this.on_destory();
+    destroy() { // 删掉该物体
+        this.on_destroy();
         for (let i = 0; i < MY_GAME_OBJECT.length; i++) {
             if (MY_GAME_OBJECT[i] === this) {
                 MY_GAME_OBJECT.splice(i, 1);
@@ -126,6 +126,9 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
         this.speed = speed;
         this.is_me = is_me;
         this.eps = 0.1;
+
+        this.cur_skill = null;
+
         this.start();
     }
     start() {
@@ -140,10 +143,36 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
         });
         this.playground.game_map.$canvas.mousedown(function (e) {
             if (e.which === 3) {
+                console.log("移动");
                 outer.move_to(e.clientX, e.clientY);
                 // console.log(e.clientX, e.clientY);
+            } else if (e.which === 1) {
+                if (outer.cur_skill === "fireball") {
+                    console.log("发射");
+                    outer.shoot_fireball(e.clientX, e.clientY);
+                }
+                outer.cur_skill = null;
             }
         });
+        $(window).keydown(function (e) {
+            // console.log(e.which);
+            if (e.which === 81) { // Q键
+                console.log("准备发射火球");
+                outer.cur_skill = "fireball";
+                return false;
+            }
+
+        });
+    }
+    shoot_fireball(tx, ty) {
+        let x = this.x, y = this.y;
+        let radius = this.playground.height * 0.01;
+        let angle = Math.atan2(ty - y, tx - x);
+        let vx = Math.cos(angle), vy = Math.sin(angle);
+        let color = "orange";
+        let speed = this.playground.height * 0.5;
+        let move_length = this.playground.height * 0.7;
+        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length)
     }
     get_dist(x1, y1, x2, y2) {
         let dx = x1 - x2;
@@ -174,6 +203,43 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
             this.y += this.vy * moved;
             this.move_length -= moved;
         }
+        this.render();
+    }
+    render() {
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        this.ctx.fillStyle = this.color;
+        this.ctx.fill();
+    }
+}class FireBall extends MyGameObject {
+    constructor(playground, player, x, y, radius, vx, vy, color, speed, move_length) {
+        super();
+        this.playground = playground;
+        this.player = player;
+        this.ctx = this.playground.game_map.ctx;
+        this.x = x, this.y = y;
+        this.vx = vx, this.vy = vy;
+        this.radius = radius;
+        this.color = color;
+        this.speed = speed;
+        this.move_length = move_length;
+        this.eps = 0.1;
+
+        this.start();
+    }
+    start() {
+
+    }
+    update() {
+        if (this.move_length < this.eps) {
+            this.destroy();
+            return false;
+        }
+        let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
+        this.x += this.vx * moved;
+        this.y += this.vy * moved;
+        this.move_length -= moved;
+
         this.render();
     }
     render() {

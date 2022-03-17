@@ -12,11 +12,11 @@ class MyGameObject {
     update() { // 每一帧都会执行一次
 
     }
-    on_destory() { // 在被销毁前执行一次
+    on_destroy() { // 在被销毁前执行一次
 
     }
-    destory() { // 删掉该物体
-        this.on_destory();
+    destroy() { // 删掉该物体
+        this.on_destroy();
         for (let i = 0; i < MY_GAME_OBJECT.length; i++) {
             if (MY_GAME_OBJECT[i] === this) {
                 MY_GAME_OBJECT.splice(i, 1);
