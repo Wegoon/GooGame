@@ -24,6 +24,12 @@ class MyGameObject {
             }
         }
     }
+    get_dist(x1, y1, x2, y2) {
+        let dx = x1 - x2;
+        let dy = y1 - y2;
+        // console.log(dx, dy);
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 }
 
 let last_timestamp;
