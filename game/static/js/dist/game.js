@@ -157,7 +157,8 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }
-}class Player extends MyGameObject {
+}let num = 0;
+class Player extends MyGameObject {
     constructor(playground, x, y, radius, color, speed, is_me) {
         super();
         // console.log(playground.height);
@@ -176,8 +177,7 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
         this.friction = 0.9;
         this.cur_skill = null;
         this.spent_time = 0;
-        this.died = false;
-
+        console.log("宽和高：", this.playground.width, this.playground.height);
         this.start();
     }
     start() {
@@ -187,6 +187,13 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
             let tx = Math.random() * this.playground.width;
             let ty = Math.random() * this.playground.height;
             this.move_to(tx, ty);
+        }
+    }
+    on_destroy() {
+        for (let i = 0; i < this.playground.players.length; i++) {
+            if (this.playground.players[i] === this) {
+                this.playground.players.splice(i, 1);
+            }
         }
     }
     add_listening_events() {
@@ -215,6 +222,18 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
                 // console.log("准备发射火球");
                 outer.cur_skill = "fireball";
                 return false;
+            } else if (e.which === 87) { // W键
+                let tx = outer.x, ty = Math.max(0, outer.y - 0.1 * outer.playground.height);
+                outer.move_to(tx, ty);
+            } else if (e.which === 65) { // A键
+                let tx = Math.max(0, outer.x - 0.1 * outer.playground.width), ty = outer.y;
+                outer.move_to(tx, ty);
+            } else if (e.which === 83) { // S键
+                let tx = outer.x, ty = Math.min(outer.playground.height, outer.y + 0.1 * outer.playground.height);
+                outer.move_to(tx, ty);
+            } else if (e.which === 68) { // D键
+                let tx = Math.min(outer.playground.width, outer.x + 0.1 * outer.playground.width), ty = outer.y;
+                outer.move_to(tx, ty);
             }
 
         });
@@ -231,9 +250,7 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
         new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, damage)
     }
     is_attacked(angle, damage) {
-        // console.log("呜呜呜，又出错了！！");
         for (let i = 0; i < 20 + Math.random() * 10; i++) {
-            // console.log("呜呜呜，又出错了！！");
             let x = this.x, y = this.y;
             let radius = this.radius * 0.1 * Math.random();
             let angle = Math.PI * 2 * Math.random();
@@ -245,7 +262,6 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
         }
         this.radius -= damage;
         if (this.radius < 10) {
-            this.died = true;
             this.destroy();
             return true;
         }
@@ -268,46 +284,32 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
     update() {
         let outer = this;
         this.spent_time += this.timedelta / 1000;
-        if (!this.is_me && this.spent_time > 4 && Math.random() < 1 / 300) {
-            let len = this.playground.players.length;
-            let attack_players = [];
-            let player = this.playground.players[0]; // this将要攻击的人
-            if (Math.random() < 0.5 && !player.died) { // 攻击真人玩家
-                this.shoot_fireball(player.x, player.y);
-            } else { // 攻击所有可以攻击的玩家（包括真人和电脑）
-                for (let i = 0; i < len; i++) {
-                    player = this.playground.players[i];
-                    if (!player.died && this != player) attack_players.push(i);
-                }
-                if (attack_players.length) {
-                    let id = Math.floor(Math.random() * attack_players.length);
-                    player = this.playground.players[attack_players[id]];
-                    this.shoot_fireball(player.x, player.y);
+        if (!this.is_me && this.spent_time > 4 && Math.random() < 1.0 / 300) {
+            if (this.playground.players.length > 1) {
+                let player = this.playground.players[0]; // this将要攻击的人
+                if (Math.random() < 0.3 && player.is_me) { // 攻击真人玩家
+                    let tx = player.x + player.vx * player.speed * 0.3;
+                    let ty = player.y + player.vy * player.speed * 0.3;
+                    this.shoot_fireball(tx, ty);
+                } else { // 攻击所有可以攻击的玩家（包括真人和电脑）
+                    let len = this.playground.players.length;
+                    if (len) {
+                        let id = Math.floor(Math.random() * len);
+                        if (this.playground.players[id] != this) {
+                            player = this.playground.players[id];
+                            let tx = player.x + player.vx * player.speed * 0.3;
+                            let ty = player.y + player.vy * player.speed * 0.3;
+                            this.shoot_fireball(tx, ty);
+                        }
+                    }
                 }
             }
-
-            // while (true) {
-            //     let id = Math.floor(Math.random() * outer.playground.players.length);
-            //     let player = outer.playground.players[id];
-            //     if (player != outer) {
-            //         outer.shoot_fireball(player.x, player.y);
-            //         break;
-            //     }
-            // }
-            // for (let i = 0; i < this.playground.players.length; i++) {
-            //     let player = this.playground.players[i];
-            //     if (!player.died) {
-            //         this.shoot_fireball(player.x, player.y);
-            //     }
-            // }
         }
         if (this.damage_speed > 20) {
             this.vx = this.vy = 0;
             this.move_length = 0;
             this.x += this.damage_x * this.damage_speed * this.timedelta / 1000;
             this.y += this.damage_y * this.damage_speed * this.timedelta / 1000;
-            // console.log("this.x:", this.x);
-            // console.log("this.y:", this.y);
             this.x = Math.min(Math.max(this.x, 0), this.playground.width);
             this.y = Math.min(Math.max(this.y, 0), this.playground.height);
             this.damage_speed *= this.friction;
