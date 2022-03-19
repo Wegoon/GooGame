@@ -18,6 +18,7 @@ class Player extends MyGameObject {
         this.friction = 0.9;
         this.cur_skill = null;
         this.spent_time = 0;
+        this.died = false;
         this.start();
     }
     start() {
@@ -30,6 +31,7 @@ class Player extends MyGameObject {
         }
     }
     on_destroy() {
+        this.died = true;
         for (let i = 0; i < this.playground.players.length; i++) {
             if (this.playground.players[i] === this) {
                 this.playground.players.splice(i, 1);
@@ -58,24 +60,25 @@ class Player extends MyGameObject {
         });
         $(window).keydown(function (e) {
             // console.log(e.which);
-            if (e.which === 81) { // Q键
-                // console.log("准备发射火球");
-                outer.cur_skill = "fireball";
-                return false;
-            } else if (e.which === 87) { // W键
-                let tx = outer.x, ty = Math.max(0, outer.y - 0.1 * outer.playground.height);
-                outer.move_to(tx, ty);
-            } else if (e.which === 65) { // A键
-                let tx = Math.max(0, outer.x - 0.1 * outer.playground.width), ty = outer.y;
-                outer.move_to(tx, ty);
-            } else if (e.which === 83) { // S键
-                let tx = outer.x, ty = Math.min(outer.playground.height, outer.y + 0.1 * outer.playground.height);
-                outer.move_to(tx, ty);
-            } else if (e.which === 68) { // D键
-                let tx = Math.min(outer.playground.width, outer.x + 0.1 * outer.playground.width), ty = outer.y;
-                outer.move_to(tx, ty);
+            if (!outer.died) {
+                if (e.which === 81) { // Q键
+                    // console.log("准备发射火球");
+                    outer.cur_skill = "fireball";
+                    return false;
+                } else if (e.which === 87) { // W键
+                    let tx = outer.x, ty = Math.max(0, outer.y - 0.1 * outer.playground.height);
+                    outer.move_to(tx, ty);
+                } else if (e.which === 65) { // A键
+                    let tx = Math.max(0, outer.x - 0.1 * outer.playground.width), ty = outer.y;
+                    outer.move_to(tx, ty);
+                } else if (e.which === 83) { // S键
+                    let tx = outer.x, ty = Math.min(outer.playground.height, outer.y + 0.1 * outer.playground.height);
+                    outer.move_to(tx, ty);
+                } else if (e.which === 68) { // D键
+                    let tx = Math.min(outer.playground.width, outer.x + 0.1 * outer.playground.width), ty = outer.y;
+                    outer.move_to(tx, ty);
+                }
             }
-
         });
     }
     shoot_fireball(tx, ty) {
