@@ -291,8 +291,8 @@ class Player extends MyGameObject {
             if (this.playground.players.length > 1) {
                 let player = this.playground.players[0]; // this将要攻击的人
                 if (Math.random() < 0.3 && player.is_me) { // 攻击真人玩家
-                    let tx = player.x + player.vx * player.speed * 0.3;
-                    let ty = player.y + player.vy * player.speed * 0.3;
+                    let tx = player.x + player.vx * player.speed * 0.7;
+                    let ty = player.y + player.vy * player.speed * 0.7;
                     this.shoot_fireball(tx, ty);
                 } else { // 攻击所有可以攻击的玩家（包括真人和电脑）
                     let len = this.playground.players.length;
@@ -300,8 +300,8 @@ class Player extends MyGameObject {
                         let id = Math.floor(Math.random() * len);
                         if (this.playground.players[id] != this) {
                             player = this.playground.players[id];
-                            let tx = player.x + player.vx * player.speed * 0.3;
-                            let ty = player.y + player.vy * player.speed * 0.3;
+                            let tx = player.x + player.vx * player.speed * 0.7;
+                            let ty = player.y + player.vy * player.speed * 0.7;
                             this.shoot_fireball(tx, ty);
                         }
                     }
