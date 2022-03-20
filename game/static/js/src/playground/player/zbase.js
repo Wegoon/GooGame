@@ -44,15 +44,16 @@ class Player extends MyGameObject {
             return false;
         });
         this.playground.game_map.$canvas.mousedown(function (e) {
+            const rect = outer.ctx.canvas.getBoundingClientRect();
             if (!outer.died) {
                 if (e.which === 3) {
                     // console.log("移动");
-                    outer.move_to(e.clientX, e.clientY);
+                    outer.move_to(e.clientX - rect.left, e.clientY - rect.top);
                     // console.log(e.clientX, e.clientY);
                 } else if (e.which === 1) {
                     if (outer.cur_skill === "fireball" && outer.spent_time > 2) {
                         // console.log("发射");
-                        outer.shoot_fireball(e.clientX, e.clientY);
+                        outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top);
                     }
                     outer.cur_skill = null;
                 }

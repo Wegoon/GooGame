@@ -203,15 +203,16 @@ class Player extends MyGameObject {
             return false;
         });
         this.playground.game_map.$canvas.mousedown(function (e) {
+            const rect = outer.ctx.canvas.getBoundingClientRect();
             if (!outer.died) {
                 if (e.which === 3) {
                     // console.log("移动");
-                    outer.move_to(e.clientX, e.clientY);
+                    outer.move_to(e.clientX - rect.left, e.clientY - rect.top);
                     // console.log(e.clientX, e.clientY);
                 } else if (e.which === 1) {
                     if (outer.cur_skill === "fireball" && outer.spent_time > 2) {
                         // console.log("发射");
-                        outer.shoot_fireball(e.clientX, e.clientY);
+                        outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top);
                     }
                     outer.cur_skill = null;
                 }
@@ -404,19 +405,8 @@ class MyGamePlayground {
             <div class="my_game_playground">
             </div>
         `);
-        // this.hide();
-        this.root.$my_game.append(this.$playground);
-        this.width = this.$playground.width();
-        // console.log(this.width);
-        this.height = this.$playground.height();
-        // console.log(this.height);
-        this.game_map = new GameMap(this);
-        this.players = [];
-        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
-        for (let i = 0; i < 9; i++) st[i] = false;
-        for (let i = 0; i < 5; i++) {
-            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
-        }
+        this.hide();
+
         this.start();
     }
     get_random_color() {
@@ -434,6 +424,18 @@ class MyGamePlayground {
     }
     show() { // 显示playground界面
         this.$playground.show();
+        this.root.$my_game.append(this.$playground);
+        this.width = this.$playground.width();
+        // console.log(this.width);
+        this.height = this.$playground.height();
+        // console.log(this.height);
+        this.game_map = new GameMap(this);
+        this.players = [];
+        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
+        for (let i = 0; i < 9; i++) st[i] = false;
+        for (let i = 0; i < 5; i++) {
+            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
+        }
     }
     hide() { // 关闭playground界面
         this.$playground.hide();
@@ -442,7 +444,7 @@ class MyGamePlayground {
     constructor(id) {
         this.id = id;
         this.$my_game = $('#' + id);
-        // this.menu = new MyGameMenu(this);
+        this.menu = new MyGameMenu(this);
         this.playground = new MyGamePlayground(this);
 
         this.start();
