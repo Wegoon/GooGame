@@ -18,6 +18,7 @@ class MyGameMenu {
                 </div>
             </div>
         `);
+        this.$menu.hide();
         this.root.$my_game.append(this.$menu);
         this.$single_mode = this.$menu.find('.my_game_menu_field_item_single_mode');
         this.$multi_mode = this.$menu.find('.my_game_menu_field_item_multi_mode');
@@ -182,6 +183,8 @@ class Player extends MyGameObject {
     }
     start() {
         if (this.is_me) {
+            this.img = new Image();
+            this.img.src = this.playground.root.settings.photo;
             this.add_listening_events();
         } else {
             let tx = Math.random() * this.playground.width;
@@ -337,10 +340,21 @@ class Player extends MyGameObject {
         this.render();
     }
     render() {
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        this.ctx.fillStyle = this.color;
-        this.ctx.fill();
+        if (this.is_me) {
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.stroke();
+            this.ctx.clip();
+            this.ctx.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+            this.ctx.restore();
+        }
+        else {
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.fillStyle = this.color;
+            this.ctx.fill();
+        }
     }
 }class FireBall extends MyGameObject {
     constructor(playground, player, x, y, radius, vx, vy, color, speed, move_length, damage) {
@@ -440,10 +454,68 @@ class MyGamePlayground {
     hide() { // 关闭playground界面
         this.$playground.hide();
     }
+}class Settings {
+    constructor(root) {
+        this.root = root;
+        this.platform = "WEB";
+        if (this.root.MyGameOS) this.platform = "ACAPP";
+        this.username = "";
+        this.photo = "";
+
+        this.$settings = $(`            
+            <div class= "my_game_settings">
+            
+            </div>
+        `);
+        this.root.$my_game.append(this.$settings);
+
+        this.start();
+    }
+    start() {
+        this.getinfo();
+    }
+    register() { // 打开注册界面
+
+    }
+    login() { // 打开登录界面
+
+    }
+    getinfo() {
+        let outer = this;
+        $.ajax({
+            url: "https://game.wegoon.top/settings/getinfo/",
+            type: "GET",
+            data: {
+                platform: outer.platform,
+            },
+            success: function (resp) {
+                console.log(resp);
+                if (resp.result === "success") {
+                    outer.username = resp.username;
+                    outer.photo = resp.photo;
+                    outer.hide();
+                    outer.root.menu.show();
+                } else {
+                    outer.login();
+                }
+            }
+        });
+    }
+
+    hide() {
+        this.$settings.hide();
+    }
+
+    show() {
+        this.$settings.show();
+    }
 }export class MyGame {
-    constructor(id) {
+    constructor(id, MyGameOS) {
         this.id = id;
         this.$my_game = $('#' + id);
+        this.MyGameOS = MyGameOS;
+
+        this.settings = new Settings(this);
         this.menu = new MyGameMenu(this);
         this.playground = new MyGamePlayground(this);
 
