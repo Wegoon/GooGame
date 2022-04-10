@@ -13,7 +13,7 @@ class MyGameMenu {
                     </div>
                     <br>
                     <div class="my_game_menu_field_item my_game_menu_field_item_settings">
-                        设置
+                        退出（后面会改为设置）
                     </div>
                 </div>
             </div>
@@ -41,6 +41,7 @@ class MyGameMenu {
         });
         this.$settings.click(function () {
             console.log("click settings");
+            outer.root.settings.logout_on_remote();
         });
     }
     show() { // 显示menu界面
