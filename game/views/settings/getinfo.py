@@ -8,7 +8,8 @@ def getinfo_acapp(request):
             'result': "未登录"
         })
     else:
-        player = Player.objects.all()[0]
+        # player = Player.objects.all()[0] // 管理员信息
+        player = Player.objects.get(user=user)
         return JsonResponse({
             'result': "success",
             'username': player.user.username,
@@ -22,7 +23,8 @@ def getinfo_web(request):
             'result': "未登录"
         })
     else:
-        player = Player.objects.all()[0]
+        # player = Player.objects.all()[0]   // 管理员信息
+        player = Player.objects.get(user=user)
         return JsonResponse({
             'result': "success",
             'username': player.user.username,

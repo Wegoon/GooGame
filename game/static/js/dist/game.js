@@ -179,7 +179,7 @@ class Player extends MyGameObject {
         this.friction = 0.9;
         this.cur_skill = null;
         this.spent_time = 0;
-        // this.died = false;
+        this.died = false;
         this.start();
     }
     start() {
@@ -195,7 +195,7 @@ class Player extends MyGameObject {
         }
     }
     on_destroy() {
-        // this.died = true;
+        this.died = true;
         for (let i = 0; i < this.playground.players.length; i++) {
             if (this.playground.players[i] === this) {
                 this.playground.players.splice(i, 1);
