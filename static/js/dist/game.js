@@ -79,7 +79,6 @@ class MyGameObject {
     get_dist(x1, y1, x2, y2) {
         let dx = x1 - x2;
         let dy = y1 - y2;
-        // console.log(dx, dy);
         return Math.sqrt(dx * dx + dy * dy);
     }
 }
@@ -122,7 +121,6 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
     }
 }class Particle extends MyGameObject {
     constructor(playground, x, y, radius, vx, vy, color, speed, move_length) {
-        // console.log("呜呜呜，又出错了！！");
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -141,7 +139,6 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
 
     }
     update() {
-        // console.log("呜呜呜，又出错了！！");
         if (this.speed < this.eps || this.move_length < this.eps) {
             this.destroy();
             return false;
@@ -163,7 +160,6 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
 class Player extends MyGameObject {
     constructor(playground, x, y, radius, color, speed, is_me) {
         super();
-        // console.log(playground.height);
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
         this.x = x, this.y = y;
@@ -186,7 +182,6 @@ class Player extends MyGameObject {
         if (this.is_me) {
             this.img = new Image();
             this.img.src = this.playground.root.settings.photo;
-            console.log(this.img.src);
             this.add_listening_events();
         } else {
             let tx = Math.random() * this.playground.width;
@@ -211,12 +206,9 @@ class Player extends MyGameObject {
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (!outer.died) {
                 if (e.which === 3) {
-                    // console.log("移动");
                     outer.move_to(e.clientX - rect.left, e.clientY - rect.top);
-                    // console.log(e.clientX, e.clientY);
                 } else if (e.which === 1) {
                     if (outer.cur_skill === "fireball" && outer.spent_time > 2) {
-                        // console.log("发射");
                         outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top);
                     }
                     outer.cur_skill = null;
@@ -224,10 +216,8 @@ class Player extends MyGameObject {
             }
         });
         $(window).keydown(function (e) {
-            // console.log(e.which);
             if (!outer.died) {
                 if (e.which === 81) { // Q键
-                    // console.log("准备发射火球");
                     outer.cur_skill = "fireball";
                     return false;
                 } else if (e.which === 87) { // W键
@@ -281,12 +271,9 @@ class Player extends MyGameObject {
 
     move_to(tx, ty) {
         this.move_length = this.get_dist(this.x, this.y, tx, ty);
-        // console.log(this.move_length);
         let angle = Math.atan2(ty - this.y, tx - this.x);
-        // console.log(angle);
         this.vx = Math.cos(angle);
         this.vy = Math.sin(angle);
-        // console.log(this.vx, this.vy);
     }
 
     update() {
@@ -331,9 +318,7 @@ class Player extends MyGameObject {
                     this.move_to(tx, ty);
                 }
             } else {
-                // console.log(this.speed);
                 let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
-                // console.log(this.speed * this.timedelta / 1000);
                 this.x += this.vx * moved;
                 this.y += this.vy * moved;
                 this.move_length -= moved;
@@ -372,7 +357,6 @@ class Player extends MyGameObject {
         this.move_length = move_length;
         this.damage = damage;
         this.eps = 0.1;
-        // console.log(this.damage);
         this.start();
     }
     start() {
@@ -387,7 +371,6 @@ class Player extends MyGameObject {
         this.x += this.vx * moved;
         this.y += this.vy * moved;
         this.move_length -= moved;
-        // console.log("呜呜呜！！！");
         for (let i = 0; i < this.playground.players.length; i++) {
             let player = this.playground.players[i];
             if (this.player !== player && !player.died && this.is_collision(player)) {
@@ -398,7 +381,6 @@ class Player extends MyGameObject {
     }
     is_collision(player) {
         let distance = this.get_dist(this.x, this.y, player.x, player.y);
-        // console.log("距离：", distance);
         if (distance < this.radius + player.radius) return true;
         return false;
     }
@@ -442,9 +424,7 @@ class MyGamePlayground {
         this.$playground.show();
         this.root.$my_game.append(this.$playground);
         this.width = this.$playground.width();
-        // console.log(this.width);
         this.height = this.$playground.height();
-        // console.log(this.height);
         this.game_map = new GameMap(this);
         this.players = [];
         this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
@@ -567,7 +547,9 @@ class MyGamePlayground {
     }
     start() {
         this.getinfo();
-        this.add_listening_events();
+        if (this.platform === "WEB") {
+            this.add_listening_events();
+        } 
     }
 
     add_listening_events() {
@@ -585,7 +567,6 @@ class MyGamePlayground {
             url: "https://game.wegoon.top/settings/acwing/web/apply_code/",
             type: "GET",
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     window.location.replace(resp.apply_code_url);
                 }
@@ -629,7 +610,6 @@ class MyGamePlayground {
                 password: password,
             },
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     // outer.hide();
                     // outer.root.menu.show();
@@ -648,7 +628,6 @@ class MyGamePlayground {
             url: "https://game.wegoon.top/settings/logout/",
             type: "GET",
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 }
@@ -672,7 +651,6 @@ class MyGamePlayground {
                 password_confirm: password_confirm,
             },
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     // outer.hide();
                     // outer.root.menu.show();
@@ -694,7 +672,16 @@ class MyGamePlayground {
         this.$register.hide();
         this.$login.show();
     }
+
     getinfo() {
+        if (this.platform === "WEB") {
+            this.getinfo_web();
+        } else if (this.platform === "ACAPP") {
+            this.getinfo_acapp();
+        }
+    }
+
+    getinfo_web() {
         let outer = this;
         $.ajax({
             url: "https://game.wegoon.top/settings/getinfo/",
@@ -703,7 +690,6 @@ class MyGamePlayground {
                 platform: outer.platform,
             },
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     outer.username = resp.username;
                     outer.photo = resp.photo;
@@ -713,6 +699,32 @@ class MyGamePlayground {
                     outer.login();
                     // outer.register();
                 }
+            }
+        });
+    }
+
+    getinfo_acapp() {
+        let outer = this;
+        $.ajax({
+            url: "https://game.wegoon.top/settings/acwing/acapp/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                if (resp.result === "success") {
+                    outer.acapp_login(resp.appid, resp.redirect_uri, resp.scope, resp.state);
+                }
+            }
+        });
+    }
+
+    acapp_login(appid, redirect_uri, scope, state) {
+        let outer = this;
+        this.root.MyGameOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
+            console.log(resp);
+            if (resp.result === "success") {
+                outer.username = resp.username;
+                outer.photo = resp.photo;
+                outer.hide();
+                outer.root.menu.show();
             }
         });
     }

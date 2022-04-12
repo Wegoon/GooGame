@@ -109,7 +109,9 @@ class Settings {
     }
     start() {
         this.getinfo();
-        this.add_listening_events();
+        if (this.platform === "WEB") {
+            this.add_listening_events();
+        } 
     }
 
     add_listening_events() {
@@ -127,7 +129,6 @@ class Settings {
             url: "https://game.wegoon.top/settings/acwing/web/apply_code/",
             type: "GET",
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     window.location.replace(resp.apply_code_url);
                 }
@@ -171,7 +172,6 @@ class Settings {
                 password: password,
             },
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     // outer.hide();
                     // outer.root.menu.show();
@@ -190,7 +190,6 @@ class Settings {
             url: "https://game.wegoon.top/settings/logout/",
             type: "GET",
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 }
@@ -214,7 +213,6 @@ class Settings {
                 password_confirm: password_confirm,
             },
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     // outer.hide();
                     // outer.root.menu.show();
@@ -236,7 +234,16 @@ class Settings {
         this.$register.hide();
         this.$login.show();
     }
+
     getinfo() {
+        if (this.platform === "WEB") {
+            this.getinfo_web();
+        } else if (this.platform === "ACAPP") {
+            this.getinfo_acapp();
+        }
+    }
+
+    getinfo_web() {
         let outer = this;
         $.ajax({
             url: "https://game.wegoon.top/settings/getinfo/",
@@ -245,7 +252,6 @@ class Settings {
                 platform: outer.platform,
             },
             success: function (resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     outer.username = resp.username;
                     outer.photo = resp.photo;
@@ -255,6 +261,32 @@ class Settings {
                     outer.login();
                     // outer.register();
                 }
+            }
+        });
+    }
+
+    getinfo_acapp() {
+        let outer = this;
+        $.ajax({
+            url: "https://game.wegoon.top/settings/acwing/acapp/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                if (resp.result === "success") {
+                    outer.acapp_login(resp.appid, resp.redirect_uri, resp.scope, resp.state);
+                }
+            }
+        });
+    }
+
+    acapp_login(appid, redirect_uri, scope, state) {
+        let outer = this;
+        this.root.MyGameOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
+            console.log(resp);
+            if (resp.result === "success") {
+                outer.username = resp.username;
+                outer.photo = resp.photo;
+                outer.hide();
+                outer.root.menu.show();
             }
         });
     }

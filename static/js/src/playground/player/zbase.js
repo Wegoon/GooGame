@@ -2,7 +2,6 @@ let num = 0;
 class Player extends MyGameObject {
     constructor(playground, x, y, radius, color, speed, is_me) {
         super();
-        // console.log(playground.height);
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
         this.x = x, this.y = y;
@@ -25,7 +24,6 @@ class Player extends MyGameObject {
         if (this.is_me) {
             this.img = new Image();
             this.img.src = this.playground.root.settings.photo;
-            console.log(this.img.src);
             this.add_listening_events();
         } else {
             let tx = Math.random() * this.playground.width;
@@ -50,12 +48,9 @@ class Player extends MyGameObject {
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (!outer.died) {
                 if (e.which === 3) {
-                    // console.log("移动");
                     outer.move_to(e.clientX - rect.left, e.clientY - rect.top);
-                    // console.log(e.clientX, e.clientY);
                 } else if (e.which === 1) {
                     if (outer.cur_skill === "fireball" && outer.spent_time > 2) {
-                        // console.log("发射");
                         outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top);
                     }
                     outer.cur_skill = null;
@@ -63,10 +58,8 @@ class Player extends MyGameObject {
             }
         });
         $(window).keydown(function (e) {
-            // console.log(e.which);
             if (!outer.died) {
                 if (e.which === 81) { // Q键
-                    // console.log("准备发射火球");
                     outer.cur_skill = "fireball";
                     return false;
                 } else if (e.which === 87) { // W键
@@ -120,12 +113,9 @@ class Player extends MyGameObject {
 
     move_to(tx, ty) {
         this.move_length = this.get_dist(this.x, this.y, tx, ty);
-        // console.log(this.move_length);
         let angle = Math.atan2(ty - this.y, tx - this.x);
-        // console.log(angle);
         this.vx = Math.cos(angle);
         this.vy = Math.sin(angle);
-        // console.log(this.vx, this.vy);
     }
 
     update() {
@@ -170,9 +160,7 @@ class Player extends MyGameObject {
                     this.move_to(tx, ty);
                 }
             } else {
-                // console.log(this.speed);
                 let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
-                // console.log(this.speed * this.timedelta / 1000);
                 this.x += this.vx * moved;
                 this.y += this.vy * moved;
                 this.move_length -= moved;

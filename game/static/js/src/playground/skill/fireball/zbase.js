@@ -12,7 +12,6 @@ class FireBall extends MyGameObject {
         this.move_length = move_length;
         this.damage = damage;
         this.eps = 0.1;
-        // console.log(this.damage);
         this.start();
     }
     start() {
@@ -27,7 +26,6 @@ class FireBall extends MyGameObject {
         this.x += this.vx * moved;
         this.y += this.vy * moved;
         this.move_length -= moved;
-        // console.log("呜呜呜！！！");
         for (let i = 0; i < this.playground.players.length; i++) {
             let player = this.playground.players[i];
             if (this.player !== player && !player.died && this.is_collision(player)) {
@@ -38,7 +36,6 @@ class FireBall extends MyGameObject {
     }
     is_collision(player) {
         let distance = this.get_dist(this.x, this.y, player.x, player.y);
-        // console.log("距离：", distance);
         if (distance < this.radius + player.radius) return true;
         return false;
     }

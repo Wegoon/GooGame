@@ -1,6 +1,5 @@
 class Particle extends MyGameObject {
     constructor(playground, x, y, radius, vx, vy, color, speed, move_length) {
-        // console.log("呜呜呜，又出错了！！");
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -19,7 +18,6 @@ class Particle extends MyGameObject {
 
     }
     update() {
-        // console.log("呜呜呜，又出错了！！");
         if (this.speed < this.eps || this.move_length < this.eps) {
             this.destroy();
             return false;
