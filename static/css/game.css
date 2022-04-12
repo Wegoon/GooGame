@@ -86,12 +86,12 @@
     cursor: pointer;
 }
 
-.my_game_settings_others_login {
+.my_game_settings_others_login_acwing {
     display: block;
     height: 7vh;
 }
 
-.my_game_settings_others_login>img {
+.my_game_settings_others_login_acwing>img {
     display: block;
     position: relative;
     top: 50%;
@@ -100,7 +100,7 @@
     cursor: pointer;
 }
 
-.my_game_settings_others_login>div {
+.my_game_settings_others_login_acwing>div {
     display: block;
     color: white;
     font-size: 1.5vh;

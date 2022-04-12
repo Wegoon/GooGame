@@ -491,7 +491,7 @@ class MyGamePlayground {
                         注册
                     </div>
                     <br>
-                    <div class= "my_game_settings_others_login">
+                    <div class= "my_game_settings_others_login_acwing">
                         <img width="30" src="https://game.wegoon.top/static/image/settings/submit_logo.png">
                         <br>
                         <div>
@@ -530,7 +530,7 @@ class MyGamePlayground {
                         登录
                     </div>
                     <br>
-                    <div class= "my_game_settings_others_login">
+                    <div class= "my_game_settings_others_login_acwing">
                         <img width="30" src="https://game.wegoon.top/static/image/settings/submit_logo.png">
                         <br>
                         <div>
@@ -558,6 +558,9 @@ class MyGamePlayground {
 
         this.$register.hide();
 
+        this.$acwing_login = this.$settings.find('.my_game_settings_others_login_acwing img');
+
+
         this.root.$my_game.append(this.$settings);
 
         this.start();
@@ -568,8 +571,26 @@ class MyGamePlayground {
     }
 
     add_listening_events() {
+        let outer = this;
         this.add_listening_events_login();
         this.add_listening_events_register();
+
+        this.$acwing_login.click(function () {
+            outer.acwing_login();
+        });
+    }
+
+    acwing_login() {
+        $.ajax({
+            url: "https://game.wegoon.top/settings/acwing/web/apply_code/",
+            type: "GET",
+            success: function (resp) {
+                console.log(resp);
+                if (resp.result === "success") {
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        });
     }
 
     add_listening_events_login() {
