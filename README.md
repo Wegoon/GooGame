@@ -1,8 +1,10 @@
 注意：GooGame目前仍在开发中，许多功能正在完善与优化中。
 
+[`Web` 端体验地址](https://game.wegoon.top)
+
 #### 游戏介绍：
 
-<br><br><br>
+<br><br>
 
 #### 操作指南：
 
