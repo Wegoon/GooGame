@@ -178,4 +178,12 @@
     height: 100%;
     user-select: none;
     /* 不被选中*/
+    background-color: grey;
+}
+
+.my_game_playground>canvas {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

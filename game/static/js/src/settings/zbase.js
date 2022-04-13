@@ -5,7 +5,7 @@ class Settings {
         if (this.root.MyGameOS) this.platform = "ACAPP";
         this.username = "";
         this.photo = "";
-        this.$settings = $(`            
+        this.$settings = $(`
             <div class= "my_game_settings">
                 <div class= "my_game_settings_login">
                     <div class= "my_game_settings_title">
@@ -111,7 +111,7 @@ class Settings {
         this.getinfo();
         if (this.platform === "WEB") {
             this.add_listening_events();
-        } 
+        }
     }
 
     add_listening_events() {
@@ -281,7 +281,6 @@ class Settings {
     acapp_login(appid, redirect_uri, scope, state) {
         let outer = this;
         this.root.MyGameOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
-            console.log(resp);
             if (resp.result === "success") {
                 outer.username = resp.username;
                 outer.photo = resp.photo;
