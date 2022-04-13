@@ -416,6 +416,16 @@ class Player extends MyGameObject {
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }
+}class MultiPlayerSocket {
+    constructor(playground) {
+        this.playground = playground;
+        this.ws = new WebSocket("wss://game.wegoon.top/wss/multiplayer/");
+        this.start();
+    }
+
+    start() {
+
+    }
 }let st = [false, false, false, false, false, false, false, false, false];
 class MyGamePlayground {
     constructor(root) {
@@ -483,7 +493,7 @@ class MyGamePlayground {
     }
 
     show_multi_mode() {
-
+        this.mps = new MultiPlayerSocket(this);
     }
 
     hide() { // 关闭playground界面

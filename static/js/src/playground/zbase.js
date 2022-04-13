@@ -65,7 +65,7 @@ class MyGamePlayground {
     }
 
     show_multi_mode() {
-
+        this.mps = new MultiPlayerSocket(this);
     }
 
     hide() { // 关闭playground界面
