@@ -1,6 +1,6 @@
 注意：GooGame目前仍在开发中，许多功能正在完善与优化中。
 
-[`Web` 端体验地址](https://game.wegoon.top)
+<a href="https://game.wegoon.top" target="_blank">`Web` 端体验地址</a>
 
 #### 游戏介绍：
 
@@ -21,3 +21,5 @@ Tip：由于键盘控制走位实现仍不丝滑，建议不要采用以下方�
 `W 键`：向上移动	$\qquad\qquad$	`S 键`：向下移动			
 
 `A 键`：向左移动	$\qquad\qquad$	`D 键`：向右移动
+
+<br><br>
