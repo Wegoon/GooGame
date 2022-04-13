@@ -38,21 +38,36 @@ class MyGamePlayground {
         if (this.game_map) this.game_map.resize();
     }
 
-    show() { // 显示playground界面
+    show(mode) { // 显示playground界面
         this.$playground.show();
-
         // this.width = this.$playground.width();
         // this.height = this.$playground.height();
-        this.resize();
 
         this.game_map = new GameMap(this);
+
+        this.resize();
+
         this.players = [];
-        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.15, true));
-        for (let i = 0; i < 9; i++) st[i] = false;
-        for (let i = 0; i < 5; i++) {
-            this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, false));
+        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.15, "me", this.root.settings.username, this.root.settings.photo));
+
+        if (mode === "single mode") {
+            this.show_single_mode();
+        } else if (mode === "multi mode") {
+            this.show_multi_mode();
         }
     }
+
+    show_single_mode() {
+        for (let i = 0; i < 9; i++) st[i] = false;
+        for (let i = 0; i < 5; i++) {
+            this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, "robot"));
+        }
+    }
+
+    show_multi_mode() {
+
+    }
+
     hide() { // 关闭playground界面
         this.$playground.hide();
     }
