@@ -13,7 +13,7 @@ class MyGameMenu {
                     </div>
                     <br>
                     <div class="my_game_menu_field_item my_game_menu_field_item_settings">
-                        退出（后面会改为设置）
+                        退出
                     </div>
                 </div>
             </div>
@@ -58,6 +58,16 @@ class MyGameObject {
         MY_GAME_OBJECT.push(this);
         this.has_called_start = false; // 是否执行过start函数
         this.timedelta = 0; // 当前帧距离上一帧的时间间隔
+        this.uuid = this.create_uuid();
+        console.log(this.uuid);
+    }
+    create_uuid() {
+        let res = "";
+        for (let i = 0; i < 20; i++) {
+            let x = parseInt(Math.floor(Math.random() * 10));
+            res += x;
+        }
+        return res;
     }
     start() { // 只会在第一帧执行一次
 
@@ -168,6 +178,8 @@ requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
 }let num = 0;
 class Player extends MyGameObject {
     constructor(playground, x, y, radius, color, speed, character, username, photo) {
+        console.log(character, username, photo);
+
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -424,7 +436,48 @@ class Player extends MyGameObject {
     }
 
     start() {
+        this.receive();
+    }
 
+    receive() {
+        let outer = this;
+        this.ws.onmessage = function (e) {
+            let data = JSON.parse(e.data);
+            console.log(data);
+            let uuid = data.uuid;
+            if (uuid === outer.uuid) return false;
+
+            let event = data.event;
+            if (event === "create_player") {
+                outer.receive_create_player(uuid, data.username, data.photo);
+            }
+        };
+    }
+
+    send_create_player(username, photo) {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "create_player",
+            'uuid': outer.uuid,
+            'username': username,
+            'photo': photo,
+        }));
+    }
+
+    receive_create_player(uuid, username, photo) {
+        let player = new Player(
+            this.playground,
+            this.playground.width / 2 / this.playground.scale,
+            0.5,
+            0.05,
+            "white",
+            0.15,
+            "enemy",
+            username,
+            photo,
+        );
+        player.uuid = uuid;
+        this.playground.players.push(player);
     }
 }let st = [false, false, false, false, false, false, false, false, false];
 class MyGamePlayground {
@@ -493,7 +546,12 @@ class MyGamePlayground {
     }
 
     show_multi_mode() {
+        let outer = this;
         this.mps = new MultiPlayerSocket(this);
+        this.mps.uuid = this.players[0].uuid;
+        this.mps.ws.onopen = function () {
+            outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
+        };
     }
 
     hide() { // 关闭playground界面

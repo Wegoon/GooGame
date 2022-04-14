@@ -1,6 +1,8 @@
 let num = 0;
 class Player extends MyGameObject {
     constructor(playground, x, y, radius, color, speed, character, username, photo) {
+        console.log(character, username, photo);
+
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;

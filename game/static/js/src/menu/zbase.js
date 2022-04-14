@@ -13,7 +13,7 @@ class MyGameMenu {
                     </div>
                     <br>
                     <div class="my_game_menu_field_item my_game_menu_field_item_settings">
-                        退出（后面会改为设置）
+                        退出
                     </div>
                 </div>
             </div>

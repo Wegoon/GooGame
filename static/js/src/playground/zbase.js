@@ -65,7 +65,12 @@ class MyGamePlayground {
     }
 
     show_multi_mode() {
+        let outer = this;
         this.mps = new MultiPlayerSocket(this);
+        this.mps.uuid = this.players[0].uuid;
+        this.mps.ws.onopen = function () {
+            outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
+        };
     }
 
     hide() { // 关闭playground界面
