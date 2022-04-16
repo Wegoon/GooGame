@@ -184,17 +184,20 @@ class Settings {
     }
 
     logout_on_remote() { // 在远程服务器上登出
-        if (this.platform === "ACAPP") return false;
-
-        $.ajax({
-            url: "https://game.wegoon.top/settings/logout/",
-            type: "GET",
-            success: function (resp) {
-                if (resp.result === "success") {
-                    location.reload();
+        if (this.platform === "ACAPP") {
+            this.root.MyGameOS.api.window.close();
+        }
+        else {
+            $.ajax({
+                url: "https://game.wegoon.top/settings/logout/",
+                type: "GET",
+                success: function (resp) {
+                    if (resp.result === "success") {
+                        location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     register_on_remote() { // 在远程服务器上注册
@@ -270,7 +273,7 @@ class Settings {
         $.ajax({
             url: "https://game.wegoon.top/settings/acwing/acapp/apply_code/",
             type: "GET",
-            success: function(resp) {
+            success: function (resp) {
                 if (resp.result === "success") {
                     outer.acapp_login(resp.appid, resp.redirect_uri, resp.scope, resp.state);
                 }
@@ -280,7 +283,7 @@ class Settings {
 
     acapp_login(appid, redirect_uri, scope, state) {
         let outer = this;
-        this.root.MyGameOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp){
+        this.root.MyGameOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function (resp) {
             if (resp.result === "success") {
                 outer.username = resp.username;
                 outer.photo = resp.photo;

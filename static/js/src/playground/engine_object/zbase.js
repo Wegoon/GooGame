@@ -6,7 +6,6 @@ class MyGameObject {
         this.has_called_start = false; // 是否执行过start函数
         this.timedelta = 0; // 当前帧距离上一帧的时间间隔
         this.uuid = this.create_uuid();
-        console.log(this.uuid);
     }
     create_uuid() {
         let res = "";
