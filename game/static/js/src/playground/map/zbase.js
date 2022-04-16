@@ -2,13 +2,13 @@ class GameMap extends MyGameObject {
     constructor(playground) {
         super();
         this.playground = playground;
-        this.$canvas = $('<canvas></canvas>');
+        this.$canvas = $('<canvas tabindex=0></canvas>');       // tabindex=0是为了让canvas这个元素能够监听读入事件
         this.ctx = this.$canvas[0].getContext('2d');
         this.resize();
         this.playground.$playground.append(this.$canvas);
     }
     start() {
-
+        this.$canvas.focus();
     }
 
     resize() {

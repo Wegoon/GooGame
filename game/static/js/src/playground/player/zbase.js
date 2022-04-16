@@ -70,7 +70,7 @@ class Player extends MyGameObject {
             return false;
         });
         this.playground.game_map.$canvas.mousedown(function (e) {
-            if (outer.playground.state !== "fighting") return false;
+            if (outer.playground.state !== "fighting") return true;
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (e.which === 3) {
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
@@ -83,13 +83,13 @@ class Player extends MyGameObject {
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
                 let ty = (e.clientY - rect.top) / outer.playground.scale;
                 if (outer.cur_skill === "fireball"/*&& outer.spent_time > 2*/) {
-                    if (outer.fireball_coldtime > outer.eps) return false;
+                    if (outer.fireball_coldtime > outer.eps) return true;
                     let fireball = outer.shoot_fireball(tx, ty);
                     if (outer.playground.mode === "multi mode") {
                         outer.playground.mps.send_shoot_fireball(tx, ty, fireball.uuid);
                     }
                 } else if (outer.cur_skill === "blink") {
-                    if (outer.blink_coldtime > outer.eps) return false;
+                    if (outer.blink_coldtime > outer.eps) return true;
                     outer.blink(tx, ty);
                     if (outer.playground.mode === "multi mode") {
                         outer.playground.mps.send_blink(tx, ty);
@@ -97,11 +97,23 @@ class Player extends MyGameObject {
                 }
             }
         });
-        $(window).keydown(function (e) {
+        this.playground.game_map.$canvas.keydown(function (e) {
+            if (e.which === 13) {   // enter打开聊天框
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            } else if (e.which === 27) {    // esc关闭聊天框
+                if (outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.hide_input();
+                    return false;
+                }
+            }
+
             if (outer.playground.state !== "fighting") return true;
 
             if (e.which === 81) { // Q键
-                if (outer.fireball_coldtime > outer.eps) return false;
+                if (outer.fireball_coldtime > outer.eps) return true;
                 outer.cur_skill = "fireball";
                 return true;
             } else if (e.which === 87) { // W键
@@ -117,7 +129,7 @@ class Player extends MyGameObject {
                 let tx = Math.min(outer.playground.width / outer.playground.scale, outer.x + 0.1 * outer.playground.width / outer.playground.scale), ty = outer.y;
                 outer.move_to(tx, ty);
             } else if (e.which === 70) {
-                if (outer.blink_coldtime > outer.eps) return false;
+                if (outer.blink_coldtime > outer.eps) return true;
                 outer.cur_skill = "blink";
                 return false;
             }
