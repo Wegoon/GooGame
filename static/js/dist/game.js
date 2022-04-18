@@ -54,7 +54,7 @@ class MyGameMenu {
     constructor(playground) {
         this.playground = playground;
 
-        this.$history = $(`<div class="my_game_chat_field_history">历史记录</div>`);
+        this.$history = $(`<div class="my_game_chat_field_history"></div>`);
         this.$input = $(`<input type="text" class="my_game_chat_field_input">`);
 
         this.$history.hide();
@@ -121,7 +121,8 @@ class MyGameMenu {
         this.$input.hide();
         this.playground.game_map.$canvas.focus();
     }
-}let MY_GAME_OBJECT = [];
+}
+let MY_GAME_OBJECT = [];
 
 class MyGameObject {
     constructor() {
@@ -179,7 +180,8 @@ let MY_GAME_ANIMATION = function (timestamp) {
     requestAnimationFrame(MY_GAME_ANIMATION);
 }
 
-requestAnimationFrame(MY_GAME_ANIMATION);class GameMap extends MyGameObject {
+requestAnimationFrame(MY_GAME_ANIMATION);
+class GameMap extends MyGameObject {
     constructor(playground) {
         super();
         this.playground = playground;
@@ -845,7 +847,6 @@ class Player extends MyGameObject {
     }
 
     receive_message(uuid, username, text) {
-        console.log(username);
         this.playground.chat_field.add_message(username, text);
     }
 }let st = [false, false, false, false, false, false, false, false, false];

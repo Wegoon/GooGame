@@ -2,7 +2,7 @@ class ChatField {
     constructor(playground) {
         this.playground = playground;
 
-        this.$history = $(`<div class="my_game_chat_field_history">历史记录</div>`);
+        this.$history = $(`<div class="my_game_chat_field_history"></div>`);
         this.$input = $(`<input type="text" class="my_game_chat_field_input">`);
 
         this.$history.hide();
