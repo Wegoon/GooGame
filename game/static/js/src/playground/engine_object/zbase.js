@@ -21,9 +21,15 @@ class MyGameObject {
     update() { // 每一帧都会执行一次
 
     }
+
+    late_update() {     // 在每一帧的最后执行一次
+
+    }
+
     on_destroy() { // 在被销毁前执行一次
 
     }
+
     destroy() { // 删掉该物体
         this.on_destroy();
         for (let i = 0; i < MY_GAME_OBJECT.length; i++) {
@@ -33,6 +39,7 @@ class MyGameObject {
             }
         }
     }
+
     get_dist(x1, y1, x2, y2) {
         let dx = x1 - x2;
         let dy = y1 - y2;
@@ -52,6 +59,12 @@ let MY_GAME_ANIMATION = function (timestamp) {
             obj.update();
         }
     }
+
+    for (let i = 0; i < MY_GAME_OBJECT.length; i++) {
+        let obj = MY_GAME_OBJECT[i];
+        obj.late_update();
+    }
+
     last_timestamp = timestamp;
     requestAnimationFrame(MY_GAME_ANIMATION);
 }
